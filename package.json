@@ -1,0 +1,21 @@
+{
+  "name": "flibbertigibbet",
+  "version": "1.0.0",
+  "description": "traveling flibbertigibbet",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "test"
+  },
+  "keywords": [
+    "travel"
+  ],
+  "author": "Sezgi Ulucam",
+  "license": "ISC",
+  "devDependencies": {
+    "grunt": "^0.4.5"
+  }
+}

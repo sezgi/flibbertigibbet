@@ -1,0 +1,106 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Flibbertigibbet</title>
+  <meta name="description" content="Flibbertigibbet">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
+</head>
+
+<body>
+  
+  <div id="fb-root"></div>
+  <script>
+    window.fbAsyncInit = function() {
+      Parse.FacebookUtils.init({
+        appId      : '250235915165087',
+        cookie     : true, // enable cookies to allow Parse to access the session
+        xfbml      : true  // parse XFBML
+      });
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "//connect.facebook.net/en_US/all.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+
+  <!-- MAIN -->
+
+  <div id="main">
+  </div>
+
+  <script type="text/javascript">
+    Parse.initialize("9Ng29k63z5eIGtf6No27eRIv5euanW2jllGlk079", "YqOmJpkAhLRLbXT6VphCj0SiYagTHfg0wOnuKbFb");
+    
+    // TODO: convert to React component
+    if (Parse.User.current()) {
+      $('#main').append('<a class="logout-link" href="#">Log out</a>');
+    } else {
+      $('#main').append('<a class="login-button" href="#">Log in with Facebook</a>');
+    };
+
+    $('.login-button').click(function (e) {
+      e.preventDefault();
+
+      Parse.FacebookUtils.logIn("publish_actions,email", {
+        success: function(user) {          
+          if (!user.existed()) {
+            var accessToken = user.attributes.authData.facebook.access_token,
+                profile;
+
+            $.ajax({
+              url: "https://graph.facebook.com/v2.0/me",
+              data: {
+                access_token: accessToken
+              },
+              success: function (response) {
+                // save facebook info to user object
+                _.each(_.keys(response), function (userProp) {
+                  if (userProp != 'id') {
+                    user.set(userProp, response[userProp]);
+                  }
+                })
+                user.save();
+              },
+              error: function (response, errorText) {
+                console.log(errorText);
+              }
+            });
+          }
+
+        },
+        error: function(user, error) {
+          console.log('User cancelled the Facebook login or did not fully authorize.');
+        }
+      }).then(function () {
+        // TODO: rerender React component instead of reloading
+        location.reload(); 
+      });
+    });
+
+    $('.logout-link').click(function (e) {
+      e.preventDefault();
+      Parse.User.logOut();
+      // TODO: rerender React component instead of reloading
+      location.reload();
+    })
+
+    // var TestObject = Parse.Object.extend("TestObject");
+    // var testObject = new TestObject();
+    // testObject.save({foo: "bar"}).then(function(object) {
+    //   alert("yay! it worked");
+    // });
+  </script>
+</body>
+
+</html>
