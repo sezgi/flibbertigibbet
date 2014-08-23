@@ -5,18 +5,31 @@ module.exports = function(grunt) {
     cssmin: {
       combine: {
         files: {
-          'dest/<%= pkg.name %>.min.css': ['src/css/*']
+          'build/<%= pkg.name %>.min.css': ['src/css/*']
         }
+      }
+    },
+    react: {
+      convert: {
+        files: [
+          {
+            expand: true,
+            cwd: 'src/jsx/',
+            src: ['*.js'],
+            dest: 'src/js/',
+            ext: '.js'
+          }
+        ]
       }
     },
     uglify: {
       js: {
         options: {
           sourceMap: true,
-          sourceMapName: 'dest/<%= pkg.name %>.map'
+          sourceMapName: 'build/<%= pkg.name %>.map'
         },
         files: {
-          'dest/<%= pkg.name %>.min.js': ['src/js/*']
+          'build/<%= pkg.name %>.min.js': ['src/js/*']
         }
       }
     },
@@ -29,14 +42,20 @@ module.exports = function(grunt) {
           src: ['index.html']
         }
       }
+    },
+    watch: {
+      files: ['src/**/*'],
+      tasks: ['default']
     }
   });
 
   // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-react');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-cache-breaker');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default tasks.
-  grunt.registerTask('default', ['cssmin:combine', 'uglify:js', 'cachebreaker:bust']);
+  grunt.registerTask('default', ['cssmin:combine', 'react:convert', 'uglify:js', 'cachebreaker:bust']);
 };

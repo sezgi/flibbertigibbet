@@ -6,21 +6,21 @@
 //   alert("yay! it worked");
 // });
 
-var FacebookButton = React.createClass({displayName: 'FacebookButton',
+var FacebookButton = React.createClass({
   render: function () {
     if (Parse.User.current()) {
       return (
-        React.DOM.a({className: "logout-link", href: "#"}, "Log out")
+        <a className="logout-link" href="#">Log out</a>
       );
     } else {
       return (
-        React.DOM.a({className: "login-button", href: "#"}, "Log in with Facebook")
+        <a className="login-button" href="#">Log in with Facebook</a>
       );
     }
   }
 });
 
-React.renderComponent(FacebookButton(null), $('#main')[0]);
+React.renderComponent(<FacebookButton />, $('#main')[0]);
 
 $('.login-button').click(function (e) {
   e.preventDefault();
