@@ -1,69 +1,67 @@
 /** @jsx React.DOM */
 
-// var TestObject = Parse.Object.extend("TestObject");
-// var testObject = new TestObject();
-// testObject.save({foo: "bar"}).then(function(object) {
-//   alert("yay! it worked");
-// });
+var Main = React.createClass({displayName: 'Main',
+  // Store session state.
+  getInitialState: function () {
+    return {
+      loggedIn: this.props.currentUser
+    };
+  },
 
-var FacebookButton = React.createClass({displayName: 'FacebookButton',
-  render: function () {
-    if (Parse.User.current()) {
-      return (
-        React.DOM.a({className: "logout-link", href: "#"}, "Log out")
-      );
+  handleSessionChange: function () {
+    if (this.state.loggedIn) {
+      // Log user out and set logged out state.
+      Parse.User.logOut();
+      this.setState({ loggedIn: false });
     } else {
-      return (
-        React.DOM.a({className: "login-button", href: "#"}, "Log in with Facebook")
-      );
+      // Log user in and set logged in state.
+      Parse.FacebookUtils.logIn("publish_actions,email", {
+        success: function(user) {          
+          // If new user, get user info from facebook.
+          if (!user.existed()) {
+            this.createUser(user);
+          }
+        },
+        error: function(user, error) {
+          console.log('User cancelled the Facebook login or did not fully authorize.');
+        }
+      }).then(_.bind(function () {
+        this.setState({ loggedIn: true });
+      }, this));
     }
+  },
+
+  createUser: function (user) {
+    var accessToken = user.attributes.authData.facebook.access_token,
+        profile;
+
+    $.ajax({
+      url: "https://graph.facebook.com/v2.0/me",
+      data: {
+        access_token: accessToken
+      },
+      success: function (response) {
+        // save facebook info to user object
+        _.each(_.keys(response), function (userProp) {
+          if (userProp != 'id') {
+            user.set(userProp, response[userProp]);
+          }
+        })
+        user.save();
+      },
+      error: function (response, errorText) {
+        console.log(errorText);
+      }
+    });
+  },
+
+  render: function () {
+    return (
+      React.DOM.div({className: "wrapper"}, 
+        FacebookButton({loggedIn: this.state.loggedIn, onSessionChange: this.handleSessionChange})
+      )
+    );
   }
 });
 
-React.renderComponent(FacebookButton(null), $('#main')[0]);
-
-$('.login-button').click(function (e) {
-  e.preventDefault();
-
-  Parse.FacebookUtils.logIn("publish_actions,email", {
-    success: function(user) {          
-      if (!user.existed()) {
-        var accessToken = user.attributes.authData.facebook.access_token,
-            profile;
-
-        $.ajax({
-          url: "https://graph.facebook.com/v2.0/me",
-          data: {
-            access_token: accessToken
-          },
-          success: function (response) {
-            // save facebook info to user object
-            _.each(_.keys(response), function (userProp) {
-              if (userProp != 'id') {
-                user.set(userProp, response[userProp]);
-              }
-            })
-            user.save();
-          },
-          error: function (response, errorText) {
-            console.log(errorText);
-          }
-        });
-      }
-
-    },
-    error: function(user, error) {
-      console.log('User cancelled the Facebook login or did not fully authorize.');
-    }
-  }).then(function () {
-    // TODO: rerender React component instead of reloading
-    location.reload(); 
-  });
-});
-
-$('.logout-link').click(function (e) {
-  e.preventDefault();
-  Parse.User.logOut();
-  // TODO: rerender React component instead of reloading
-  location.reload();
-});
+React.renderComponent(Main({currentUser: Parse.User.current()}), $('#main')[0]);
