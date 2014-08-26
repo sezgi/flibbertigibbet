@@ -3,8 +3,10 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     cssmin: {
-      files: {
-        'build/<%= pkg.name %>.min.css': ['src/css/*']
+      combine: {
+        files: {
+          'build/<%= pkg.name %>.min.css': ['src/css/*']
+        }
       }
     },
     react: {
@@ -21,20 +23,24 @@ module.exports = function(grunt) {
       }
     },
     uglify: {
-      options: {
-        sourceMap: true,
-        sourceMapName: 'build/<%= pkg.name %>.map'
-      },
-      files: {
-        'build/<%= pkg.name %>.min.js': ['src/js/*']
+      js: {
+        options: {
+          sourceMap: true,
+          sourceMapName: 'build/<%= pkg.name %>.map'
+        },
+        files: {
+          'build/<%= pkg.name %>.min.js': ['src/js/*']
+        }
       }
     },
     cachebreaker: {
-      options: {
-        match: ['flibbertigibbet.min.css', 'flibbertigibbet.min.js'],
-      },
-      files: {
-        src: ['index.html']
+      bust: {
+        options: {
+          match: ['flibbertigibbet.min.css', 'flibbertigibbet.min.js'],
+        },
+        files: {
+          src: ['index.html']
+        }
       }
     },
     watch: {
@@ -43,7 +49,7 @@ module.exports = function(grunt) {
     }
   });
 
-  // Load the plugins that provide the above tasks.
+  // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-react');
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -51,5 +57,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default tasks.
-  grunt.registerTask('default', ['cssmin', 'react:convert', 'uglify', 'cachebreaker']);
+  grunt.registerTask('default', ['cssmin:combine', 'react:convert', 'uglify:js', 'cachebreaker:bust']);
 };
