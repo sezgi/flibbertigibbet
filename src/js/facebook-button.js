@@ -9,7 +9,7 @@ var FacebookButton = React.createClass({displayName: 'FacebookButton',
   render: function () {
     var button = this.props.loggedIn ? 
       React.DOM.a({className: "logout-link", href: "#", onClick: this.handleClick}, "Log out") :
-      React.DOM.a({className: "login-button", href: "#", onClick: this.handleClick}, "Log in with Facebook");
+      React.DOM.a({className: "login-button button-link", href: "#", onClick: this.handleClick}, "Log in with Facebook");
       return (
         React.DOM.div(null, button)
       );

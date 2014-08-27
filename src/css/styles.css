@@ -40,6 +40,10 @@ body {
   line-height: 13px;
 }
 
+.button-link:hover {
+  text-decoration: none;
+}
+
 .login-button {
   display: block;
   width: 200px;
