@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     cssmin: {
       combine: {
         files: {
-          'build/<%= pkg.name %>.min.css': ['src/css/*']
+          'public/build/<%= pkg.name %>.min.css': ['src/css/*']
         }
       }
     },
@@ -26,10 +26,10 @@ module.exports = function(grunt) {
       js: {
         options: {
           sourceMap: true,
-          sourceMapName: 'build/<%= pkg.name %>.map'
+          sourceMapName: 'public/build/<%= pkg.name %>.map'
         },
         files: {
-          'build/<%= pkg.name %>.min.js': ['src/js/*']
+          'public/build/<%= pkg.name %>.min.js': ['src/js/*']
         }
       }
     },
