@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "express": "^4.8.6",
+    "hbs": "^2.7.0",
     "logfmt": "^1.1.2"
   }
 }

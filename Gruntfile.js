@@ -39,7 +39,7 @@ module.exports = function(grunt) {
           match: ['flibbertigibbet.min.css', 'flibbertigibbet.min.js'],
         },
         files: {
-          src: ['index.html']
+          src: ['views/index.html']
         }
       }
     },
