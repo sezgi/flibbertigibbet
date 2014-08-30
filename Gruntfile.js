@@ -2,13 +2,16 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    // Minify CSS into build folder.
     cssmin: {
       combine: {
         files: {
-          'public/build/<%= pkg.name %>.min.css': ['src/css/*']
+          'public/build/<%= pkg.name %>.min.css': ['public/css/*']
         }
       }
     },
+    // Convert JSX to JS. 
+    // Place JS in public folder so sourcemaps can read it.
     react: {
       convert: {
         files: [
@@ -16,12 +19,13 @@ module.exports = function(grunt) {
             expand: true,
             cwd: 'src/jsx/',
             src: ['*.jsx'],
-            dest: 'src/js/',
+            dest: 'public/js/',
             ext: '.js'
           }
         ]
       }
     },
+    // Minify JS into build folder.
     uglify: {
       js: {
         options: {
@@ -29,10 +33,11 @@ module.exports = function(grunt) {
           sourceMapName: 'public/build/<%= pkg.name %>.map'
         },
         files: {
-          'public/build/<%= pkg.name %>.min.js': ['src/js/*']
+          'public/build/<%= pkg.name %>.min.js': ['public/js/*']
         }
       }
     },
+    // Any time minified files change, change cache string.
     cachebreaker: {
       bust: {
         options: {
@@ -43,8 +48,9 @@ module.exports = function(grunt) {
         }
       }
     },
+    // Any time JSX or CSS files change, run build tasks.
     watch: {
-      files: ['src/**/*'],
+      files: ['src/jsx/*', 'public/css/*'],
       tasks: ['default']
     }
   });
