@@ -59,6 +59,7 @@ var Main = React.createClass({
     return (
       <div className="wrapper">
         <FacebookButton loggedIn={this.state.loggedIn} onSessionChange={this.handleSessionChange} />
+        <LocationSelector />
       </div>
     );
   }

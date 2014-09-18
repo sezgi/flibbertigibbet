@@ -58,7 +58,8 @@ var Main = React.createClass({displayName: 'Main',
   render: function () {
     return (
       React.DOM.div({className: "wrapper"}, 
-        FacebookButton({loggedIn: this.state.loggedIn, onSessionChange: this.handleSessionChange})
+        FacebookButton({loggedIn: this.state.loggedIn, onSessionChange: this.handleSessionChange}), 
+        LocationSelector(null)
       )
     );
   }

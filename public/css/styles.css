@@ -69,3 +69,7 @@ body {
   color: #fff;
   background: url(/images/glyphs/glyph_facebook_white.png?1404775614) no-repeat 10px center, linear-gradient(#4e6daf,#4e6daf);
 }
+
+.search-result {
+  cursor: pointer;
+}

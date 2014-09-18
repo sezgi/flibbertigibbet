@@ -12,7 +12,8 @@ app.engine('html', hbs.__express);
 app.use(function(req, res, next){
   req.config = {
     foursquareClientId: process.env.FOURSQUARE_CLIENT_ID,
-    foursquareClientSecret: process.env.FOURSQUARE_CLIENT_SECRET
+    foursquareClientSecret: process.env.FOURSQUARE_CLIENT_SECRET,
+    foursquareVersion: process.env.FOURSQUARE_VERSION
   }
   next();
 });
